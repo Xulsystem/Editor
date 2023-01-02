@@ -10,10 +10,13 @@ menu.hpan.color = rgb('#212121')
 
 menu.lpan.x = 0
 menu.lpan.y = menu.hpan.h
-menu.lpan.w = 100
-menu.lpan.h = 200
+menu.lpan.w = 270
+menu.lpan.h = love.graphics.getHeight()
 
 function menu.draw()
 	love.graphics.setColor(menu.hpan.color)
 	love.graphics.rectangle('fill', menu.hpan.x, menu.hpan.y, menu.hpan.w, menu.hpan.h)
+
+	love.graphics.setColor(menu.hpan.color)
+	love.graphics.rectangle('fill', menu.lpan.x, menu.lpan.y, menu.lpan.w, menu.lpan.h)
 end

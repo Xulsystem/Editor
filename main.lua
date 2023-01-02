@@ -1,3 +1,5 @@
+--[[ V1.0 ]]
+
 InputField = require("InputField")
 love.graphics.setDefaultFilter('nearest', 'nearest')
 require('utils')
@@ -11,7 +13,7 @@ require('explo')
 
 
 
-love.window.setMode( 800, 600, {msaa = 16, highdpi = true, resizable = true})
+love.window.setMode( 800, 600, {msaa = 0, highdpi = true, resizable = true})
 
 
 --local fieldX = 80
