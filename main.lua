@@ -1,4 +1,4 @@
---[[ V1.0 ]]
+--[[ V2.0 ]]
 
 InputField = require("InputField")
 love.graphics.setDefaultFilter('nearest', 'nearest')
@@ -25,7 +25,7 @@ dict = {}
 
 local FONT_LINE_HEIGHT = 0.8
 
-love.graphics.setBackgroundColor(.18, .18, .18)
+love.graphics.setBackgroundColor(rgb('#212121'))
 
 love.keyboard.setKeyRepeat(true)
 
@@ -33,7 +33,7 @@ dict = {}
 
 dict.keyword = {}
 dict.keyword.hash = {}
-dict.keyword.hash.color = {1, 0, 0}
+dict.keyword.hash.color = rgb('#E5838D')
 dict.keyword.hash.list = {'%#%w+'}
 
 dict.keyword.dollar = {} 
@@ -46,7 +46,7 @@ dict.keyword.args.list = {'<(.-)>'}
 
 
 dict.keyword.keyw = {}
-dict.keyword.keyw.color = {0, 0, 1}
+dict.keyword.keyw.color = rgb('#48BEFF')
 dict.keyword.keyw.list = {"%@"}
 
 GPATH = {}
@@ -113,6 +113,7 @@ function love.load()
 end
 
 function love.update(dt)
+	menu.update()
 	explo.update()
 	sheet:update()
 	sbut.updateAll()
