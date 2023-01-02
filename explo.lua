@@ -4,15 +4,12 @@ explo.gpath = {}
 explo.gpath.save = love.filesystem.getUserDirectory()
 explo.gpath.src = '/Users/macbook/Documents/PROGRAMMATION/vim/src/'
 
-
 explo.root = love.filesystem.getUserDirectory()
 for s in explo.root:gmatch("%w+") do
 	table.insert(explo.path, s)
 end
 
 explo.view = -1
-
-
 
 explo.tName = 16
 explo.tList = 20
@@ -24,9 +21,9 @@ explo.img.dir = love.graphics.newImage('icodir.png')
 local FONT_LINE_HEIGHT = 0.8
 
 explo.font = love.graphics.newFont("Poppins-Regular.ttf", 12)
-
 explo.font:setLineHeight(FONT_LINE_HEIGHT)
 
+explo.mode = 'save'
 
 explo.x = 30
 explo.y = 30
@@ -73,11 +70,6 @@ explo.cDoc.inp = InputField(sheet.name, "multiwrap")
 explo.cDoc.inp:setFont(explo.font)
 explo.cDoc.inp:setWidth(explo.cDoc.w)
 explo.cDoc.inp:setAlignment('center')
---local s, e = explo.cDoc.inp:getText():find('%.')
---explo.cDoc.inp:setSelection(0, e - 1)
---explo.cDoc.inp:setHeight(explo.font:getHeight())
-
-
 
 explo.round = 8
 explo.scroll = 0
@@ -136,7 +128,6 @@ explo.buttons.cancel:setDraw(function() 	love.graphics.setColor(rgb('#F64747'))
 										end)
 
 explo.buttons.cancel:setCallback(function() explo.view = -1 end)
-
 
 function explo.keypressed(key)
 	if key == 'escape' then
@@ -217,7 +208,6 @@ function explo.refresh()
 
 	explo.pathDisplay:setText('~/'..table.concat(explo.path, "/")..'/')
 end
-
 
 function explo.update()
 	if explo.view == 1 then
