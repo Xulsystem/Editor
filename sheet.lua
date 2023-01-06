@@ -8,7 +8,7 @@ sheet.y = menu.hpan.h
 sheet.w = love.graphics.getWidth() - menu.lpan.w
 sheet.h = love.graphics.getHeight() - menu.hpan.h
 
-sheet.name = 'Untitled.txt'
+sheet.name = 'newsrc.src'
 
 sheet.tZone = InputField("Initial text.", "multiwrap")
 
@@ -27,13 +27,14 @@ function sheet.update()
 	local txt = sheet.tZone:getText()
 	if txt:find("%$%w+%$") then
 		local s, e = txt:find("%$%w+%$")
-		local h = io.open(explo.gpath.src..txt:sub(s+1, e-1)..'.src')
-		h:read()
-		local tmp = h:read('*a')
-		sheet.tZone:setText(txt:gsub('%$%w+%$', tmp..''))
-		sheet.tZone:moveCursor(#tmp - math.floor(e-s)-1)
-		h:close()
-		
+		if io.open(explo.gpath.src..txt:sub(s+1, e-1)..'.src', 'r') then
+			local h = io.open(explo.gpath.src..txt:sub(s+1, e-1)..'.src')
+			h:read()
+			local tmp = h:read('*a')
+			sheet.tZone:setText(txt:gsub('%$%w+%$', tmp..''))
+			sheet.tZone:moveCursor(#tmp - math.floor(e-s)-1)
+			h:close()
+		end
 	end
 end
 

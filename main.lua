@@ -10,10 +10,11 @@ require('menu')
 require('sheet')
 
 require('explo')
+require('quicklist')
 
 
 
-love.window.setMode( 800, 600, {msaa = 0, highdpi = true, resizable = true})
+love.window.setMode( 800, 600, {msaa = 2, highdpi = true, resizable = true})
 
 
 --local fieldX = 80
@@ -62,7 +63,7 @@ function love.keypressed(key, scancode, isRepeat)
 	end
 
 	if love.keyboard.isDown('lctrl') and key == 's' then
-		explo.launch()
+		explo.launch('save')
 	end
 	explo.keypressed(key)
 end
@@ -110,6 +111,7 @@ end
 function love.load()
 	explo.refresh()
 	--explo.launch()
+	menu.load()
 end
 
 function love.update(dt)

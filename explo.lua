@@ -2,7 +2,7 @@ explo = {}
 explo.path = {}
 explo.gpath = {}
 explo.gpath.save = love.filesystem.getUserDirectory()
-explo.gpath.src = '/Users/macbook/Documents/PROGRAMMATION/vim/src/'
+explo.gpath.src = love.filesystem.getUserDirectory()
 
 explo.root = love.filesystem.getUserDirectory()
 for s in explo.root:gmatch("%w+") do
@@ -107,11 +107,17 @@ explo.buttons.save:setDraw(function() 	love.graphics.setColor(rgb('#47F647'))
 										
 										end)
 
-explo.buttons.save:setCallback(function() 	explo.tmp = io.open('/'..table.concat(explo.path, '/')..'/'..explo.cDoc.inp:getText(), 'w')
-											explo.tmp:write(sheet.tZone:getText())
-											explo.tmp:close()
-											explo.view = -1
-											explo.gpath.save = '/'..table.concat(explo.path, '/')..'/'
+explo.buttons.save:setCallback(function() 	if explo.mode == 'save' then
+												explo.tmp = io.open('/'..table.concat(explo.path, '/')..'/'..explo.cDoc.inp:getText(), 'w')
+												explo.tmp:write(sheet.tZone:getText())
+												explo.tmp:close()
+												explo.view = -1
+												explo.gpath.save = '/'..table.concat(explo.path, '/')..'/'
+											elseif explo.mode == 'src' then
+												explo.view = -1
+												explo.gpath.src = '/'..table.concat(explo.path, '/')..'/'
+												qlist.reload()
+											end
 											end)
 
 explo.buttons.cancel = {}
@@ -155,16 +161,22 @@ function explo.mouseclick(x, y)
 	end
 end
 
-function explo.launch()
+function explo.launch(mod)
+	explo.mode = mod
 	explo.path = {}
 	explo.cDoc.inp:setText(sheet.name)
 	local s, e = explo.cDoc.inp:getText():find('%.')
 	explo.cDoc.inp:setSelection(0, e - 1)
 	explo.view = 1
-	for s in explo.gpath.save:gmatch("%w+") do
-		table.insert(explo.path, s)
+	if explo.mode == 'save' then
+		for s in explo.gpath.save:gmatch("%w+") do
+			table.insert(explo.path, s)
+		end
+	elseif explo.mode == 'src' then
+		for s in explo.gpath.src:gmatch("%w+") do
+			table.insert(explo.path, s)
+		end
 	end
-
 	explo.refresh()
 end
 
@@ -288,31 +300,31 @@ function explo.draw()
 		love.graphics.setColor(rgb('#585858'))
 		love.graphics.rectangle('fill', explo.x + explo.pathDisplayX, explo.y + explo.pathDisplayY, explo.pathDisplay:getWidth(), explo.font:getHeight(), 4)
 
-		love.graphics.setColor(rgb('#FFFFFF'))
-		love.graphics.setScissor(explo.x + explo.pathDisplayX, explo.y + explo.pathDisplayY, explo.pathDisplay:getWidth(), explo.font:getHeight())
-		for _, text, x, y in explo.pathDisplay:eachVisibleLine() do
-			love.graphics.print(text, explo.x + explo.pathDisplayX + 6, explo.y + explo.pathDisplayY + 1)
-		end
-		love.graphics.setScissor()
-
-		love.graphics.setColor(1, 1, 1)
-		love.graphics.draw(explo.img.file, explo.x + 35, explo.y + 80, 0, 5, 5)
-
-		------------------------------------------------------------------------
-		love.graphics.setColor(1, 1, 1)
-		for _, text, x, y in explo.cDoc.inp:eachVisibleLine() do
-			love.graphics.setColor(rgb('#585858'))
-			love.graphics.rectangle('fill', explo.x + explo.cDoc.x - 4, explo.y + explo.cDoc.y + y, explo.cDoc.w + 8, explo.font:getHeight())
+			love.graphics.setColor(rgb('#FFFFFF'))
+			love.graphics.setScissor(explo.x + explo.pathDisplayX, explo.y + explo.pathDisplayY, explo.pathDisplay:getWidth(), explo.font:getHeight())
+			for _, text, x, y in explo.pathDisplay:eachVisibleLine() do
+				love.graphics.print(text, explo.x + explo.pathDisplayX + 6, explo.y + explo.pathDisplayY + 1)
+			end
+			love.graphics.setScissor()
+		if explo.mode == 'save' then
 			love.graphics.setColor(1, 1, 1)
-			love.graphics.print(text, explo.x + explo.cDoc.x + x, explo.y + explo.cDoc.y + y)
+			love.graphics.draw(explo.img.file, explo.x + 35, explo.y + 80, 0, 5, 5)
+		------------------------------------------------------------------------
+			love.graphics.setColor(1, 1, 1)
+			for _, text, x, y in explo.cDoc.inp:eachVisibleLine() do
+				love.graphics.setColor(rgb('#585858'))
+				love.graphics.rectangle('fill', explo.x + explo.cDoc.x - 4, explo.y + explo.cDoc.y + y, explo.cDoc.w + 8, explo.font:getHeight())
+				love.graphics.setColor(1, 1, 1)
+				love.graphics.print(text, explo.x + explo.cDoc.x + x, explo.y + explo.cDoc.y + y)
+			end
+			love.graphics.setColor(0, 0, 1, .5)
+			for _, x, y, w, h in explo.cDoc.inp:eachSelection() do
+				love.graphics.rectangle("fill", explo.x + explo.cDoc.x + x, explo.y + explo.cDoc.y + y + 2, w, explo.font:getHeight() - 4)
+			end
+			love.graphics.setColor(.05, .05, 05)
+			local x, y, h = explo.cDoc.inp:getCursorLayout()
+			love.graphics.rectangle("fill", explo.x + explo.cDoc.x + x, explo.y + explo.cDoc.y + y, 1, h)
 		end
-		love.graphics.setColor(0, 0, 1, .5)
-		for _, x, y, w, h in explo.cDoc.inp:eachSelection() do
-			love.graphics.rectangle("fill", explo.x + explo.cDoc.x + x, explo.y + explo.cDoc.y + y + 2, w, explo.font:getHeight() - 4)
-		end
-		love.graphics.setColor(.05, .05, 05)
-		local x, y, h = explo.cDoc.inp:getCursorLayout()
-		love.graphics.rectangle("fill", explo.x + explo.cDoc.x + x, explo.y + explo.cDoc.y + y, 1, h)
 		-------------------------------------------------------------------------
 
 	    love.graphics.setScissor(explo.display.x, explo.display.y, explo.display.w, explo.display.h)
